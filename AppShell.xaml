@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiForeignKey.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiForeignKey"
+    xmlns:views="clr-namespace:MauiForeignKey.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Title="MauiForeignKey">
+
+    <ShellContent
+        Title="Departments"
+        ContentTemplate="{DataTemplate views:DepartmentListView}"
+        Route="DepartmentsListRoute" />
+
+    <ShellContent
+        Title="Employees"
+        ContentTemplate="{DataTemplate views:EmployeeListView}"
+        Route="EmployeesListRoute" />
+
+</Shell>
