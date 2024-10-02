@@ -28,7 +28,7 @@ namespace MauiForeignKey.ViewModels
             {
                 IsBusy = true;
 
-                var items = await repository.JoinOn<Employee, Department, object>
+                var items = await repository.JoinOn<object>
                     ("Name" , "DepartmentName", new  Tuple<string, string>("DepartmentId", "Id"), "employees", "departments");
 				//var items = await App.LocalDb.GetItemsWithQuery<T>(query);
 

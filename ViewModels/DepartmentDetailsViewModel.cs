@@ -18,7 +18,17 @@ namespace MauiForeignKey.ViewModels
 		[RelayCommand]
 		private async Task Initialize()
         {
-            var emp = await repository.GetList<Employee, int>("DepartmentId", Item.Id);
+            if (await repository.Count<Employee>() == 0)
+            {
+                await repository.SaveData(new Employee
+                {
+                    Id = 1,
+                    Name = "Food",
+                    DepartmentId = 1
+                });
+            }
+            
+            var emp = (await repository.GetList<Employee>())?.Where(e => e.DepartmentId == Item.Id).ToList();   
 
 			EmployeesDepartment.Clear();
 

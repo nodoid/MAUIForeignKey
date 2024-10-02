@@ -161,9 +161,18 @@ namespace MauiForeignKey.Database
 
         async Task CreateTables()
         {
-            await connection.CreateTableAsync<BaseTable>();
-            await connection.CreateTableAsync<Employee>();
-            await connection.CreateTableAsync<Department>();
+            try
+            {
+                await connection.CreateTableAsync<BaseTable>();
+                await connection.CreateTableAsync<Employee>();
+                await connection.CreateTableAsync<Department>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to create tables");
+                throw;
+            }
+            
         }
 
         string GetName(string name)
@@ -193,15 +202,31 @@ namespace MauiForeignKey.Database
             await connection.ExecuteAsync(sql);
         }
 
-        public async Task<List<TV>> JoinOn<T, TU, TV>(string prop, string asName, Tuple<string, string> comp, 
-            string? table1, string? table2) where TV : class, new()
+        public async Task<List<TV>> JoinOn<TV>(string prop, string asName, Tuple<string, string> comp, 
+            string table1, string table2) where TV : class, new()
+        {
+            try
+            {
+                var sql = $"SELECT e.*, d.{prop} as {asName} FROM {table1} e JOIN {table2} d ON e.{comp.Item1}=d.{comp.Item2}";
+                var list = await connection.QueryAsync<TV>(sql);
+                return list ?? new List<TV>();
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Debug.WriteLine($"{ex.Message}--{ex.InnerException?.Message}");
+#endif
+                return new List<TV>();
+            }
+        }
+        
+        public async Task<List<TV>> JoinOn<T, TU, TV>(string prop, string asName, Tuple<string, string> comp) where TV : class, new()
         {
             var tbl1 = GetName(typeof(T).ToString());
             var tbl2 = GetName(typeof(TU).ToString());
             try
             {
-                var sql = table1 is null ? $"SELECT e.*, d.{prop} as {asName} FROM {tbl1} e JOIN {tbl2} d ON e.{comp.Item1}=d.{comp.Item2}" :
-                        $"SELECT e.*, d.{prop} as {asName} FROM {table1} e JOIN {table2} d ON e.{comp.Item1}=d.{comp.Item2}";
+                var sql = $"SELECT e.*, d.{prop} as {asName} FROM {tbl1} e JOIN {tbl2} d ON e.{comp.Item1}=d.{comp.Item2}";
                 var list = await connection.QueryAsync<TV>(sql);
                 return list ?? new List<TV>();
             }

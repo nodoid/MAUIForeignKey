@@ -16,7 +16,7 @@ namespace MauiForeignKey.ViewModels
 		
         public EmployeeWithDepartment employeeWithDepartment 
         { 
-            set { item = new(value); OnPropertyChanged("Item"); } 
+            set { Item = value; OnPropertyChanged("Item"); } 
         }
 
 		public ObservableCollection<Department> Departments { get; } = new();

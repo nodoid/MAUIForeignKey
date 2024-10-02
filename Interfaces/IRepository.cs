@@ -30,7 +30,10 @@
         
         Task CreateTableWithForeignKey<T>(string key, string key2, T tableName) where T : class, new();
 
-        Task<List<TV>> JoinOn<T, TU, TV>(string prop, string asName, Tuple<string, string> comp, string? table1, string? table2)
+        Task<List<TV>> JoinOn<TV>(string prop, string asName, Tuple<string, string> comp, string? table1, string? table2)
+            where TV : class, new();
+        
+        Task<List<TV>> JoinOn<T, TU, TV>(string prop, string asName, Tuple<string, string> comp2)
             where TV : class, new();
     }
 }
